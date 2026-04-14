@@ -28,6 +28,12 @@ source venv/bin/activate        # macOS/Linux
 # OR
 venv\Scripts\activate            # Windows
 
+# Create .env file with API key
+# Get GEMINI_API_KEY from https://ai.google.dev/
+cat > .env << EOF
+GEMINI_API_KEY=your_key_here
+EOF
+
 # Install dependencies
 pip install -r requirements.txt
 
@@ -64,21 +70,33 @@ Visit: **http://localhost:5173**
 
 ## Step 5: Test Workflow
 
-### Test Case:
-1. **Fill Symptom Form**
-   - Age: 25, Weight: 65 kg, Height: 160 cm
-   - Irregular cycle: YES, Cycle: 45 days
-   - Symptoms: Check some boxes (hair growth, acne, etc.)
+### Features to Test:
 
-2. **Click "Get Symptom-Based Assessment"**
-   - See risk score with percentage
+**1. PCOS Screening**
+   - Login/Register
+   - Fill symptom form  
+   - Upload ultrasound image
+   - See combined risk assessment
 
-3. **Click "Upload Ultrasound"**
-   - Upload any image file (JPEG/PNG)
+**2. Period Tracker**
+   - Log menstrual cycles
+   - Track daily symptoms
+   - View ovulation predictions
+   - Detect symptom patterns
 
-4. **See Final Result**
-   - Combined risk assessment
-   - Risk level (Low/Moderate/High)
+**3. AI Health Companion**
+   - Open AI Health page
+   - Ask a health question
+   - Get response from Google Gemini AI
+
+---
+
+## Quick Test Case:
+1. Register: jane@test.com / Pass123!
+2. Go to PCOS Detector → Fill form
+3. Upload a test ultrasound image
+4. View results
+5. Try Period Tracker & AI Health pages
 
 ---
 

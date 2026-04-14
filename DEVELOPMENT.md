@@ -18,18 +18,32 @@ This guide covers:
 
 ```
 Django REST API
-├── api_views.py
-│   ├── pcos_form_predict_api()      → Symptom prediction
-│   ├── ultrasound_prediction_api()  → CNN inference
-│   └── combined_prediction_api()    → Weighted combination
-├── api_urls.py
-│   └── URL routing to views
-├── ultrasound_predict.py
-│   ├── load_cnn_model()             → Load TensorFlow model
-│   ├── preprocess_image()           → Image preprocessing
-│   ├── predict_ultrasound()         → CNN prediction
-│   └── combine_predictions()        → Combine both models
-└── models.py                         → Database models (if needed)
+├── Accounts (Authentication)
+│   ├── models.py → CustomUser (email-based auth)
+│   ├── serializers.py → User registration/login
+│   ├── views.py → Auth endpoints (register/login/profile)
+│   └── urls.py → /api/auth/* routes
+├── Dashboard
+│   ├── views.py → Dashboard overview endpoint
+│   ├── urls.py → /api/dashboard/ route
+│   └── services.py → Data aggregation
+├── PCOS Screener
+│   ├── api_views.py → Symptom & ultrasound prediction
+│   ├── api_urls.py → /api/pcos/*, /api/ultrasound/* routes
+│   ├── ultrasound_predict.py → CNN inference
+│   ├── ml_preprocess.py → ML preprocessing
+│   └── models.py → PCOSScreener database model
+├── Period Tracker
+│   ├── models.py → Cycle, SymptomLog, LifestyleLog
+│   ├── services.py → Cycle prediction, pattern detection
+│   ├── views.py → Tracker endpoints
+│   ├── urls.py → /api/period-tracker/* routes
+│   └── ml_model.py → Irregularity prediction
+└── Chatbot (AI Health)
+    ├── models.py → ChatMessage storage
+    ├── services.py → Google Gemini API integration
+    ├── views.py → Chat endpoints
+    └── urls.py → /api/chatbot/* routes
 ```
 
 ### Frontend Architecture
@@ -48,7 +62,132 @@ React App
 
 ---
 
-## Modifying the Symptom Questionnaire
+## Period Tracker Module
+
+### Models
+
+**File:** `backend/period_tracker/models.py`
+
+```python
+class Cycle(models.Model):
+    """Menstrual cycle record"""
+    user = ForeignKey(CustomUser)
+    start_date = DateField()
+    end_date = DateField()
+    cycle_length = IntegerField()  # Days between cycles
+    period_length = IntegerField()  # Days of bleeding
+
+class SymptomLog(models.Model):
+    """Daily symptom tracking"""
+    user = ForeignKey(CustomUser)
+    date = DateField()
+    flow = CharField()  # Light/Medium/Heavy
+    cramps = BooleanField()
+    fatigue = BooleanField()
+    acne = BooleanField()
+    headache = BooleanField()
+    bloating = BooleanField()
+    breast_tenderness = BooleanField()
+    mood = CharField()  # Comma-separated moods
+    notes = TextField()
+
+class LifestyleLog(models.Model):
+    """Daily lifestyle tracking"""
+    user = ForeignKey(CustomUser)
+    date = DateField()
+    sleep_hours = FloatField()
+    stress_level = IntegerField()  # 1-10
+    activity_level = IntegerField()  # 1-10
+```
+
+### Services
+
+**File:** `backend/period_tracker/services.py`
+
+```python
+def predict_next_period(user):
+    """Predict next menstrual period based on cycle history"""
+    # Calculates average cycle length
+    # Returns: predicted_start_date, avg_cycle_length
+
+def predict_ovulation(user):
+    """Calculate ovulation day and fertile window"""
+    # Typically 14 days before next period
+    # Returns: ovulation_day, fertile_window_start/end
+
+def detect_symptom_patterns(user):
+    """Find recurring symptom patterns"""
+    # Analyzes last 3+ occurrences
+    # Returns: list of detected patterns
+```
+
+### API Endpoints
+
+- `POST /api/period-tracker/cycle/` → Add new cycle
+- `POST /api/period-tracker/symptoms/` → Log daily symptoms
+- `GET /api/period-tracker/predict/` → Get next period & ovulation
+- `GET /api/period-tracker/patterns/` → Detect patterns
+- `GET /api/period-tracker/history/` → View logs
+
+---
+
+## AI Health Companion (Chatbot) Module
+
+### Models
+
+**File:** `backend/chatbot/models.py`
+
+```python
+class ChatMessage(models.Model):
+    """Store user-AI conversations"""
+    user_message = TextField()
+    ai_response = TextField()
+    timestamp = DateTimeField(auto_now_add=True)
+    language = CharField(default='en')  # For multi-language support
+```
+
+### Services
+
+**File:** `backend/chatbot/services.py`
+
+```python
+def get_ai_response(user_message, language='en'):
+    """
+    Send message to Google Gemini API
+    
+    Args:
+        user_message: Question from user
+        language: Response language (en, es, fr, etc.)
+    
+    Returns:
+        AI-generated response from Gemini
+    """
+    # Uses GEMINI_API_KEY from environment
+    # Prompt: "You are a professional Women Health AI Companion"
+    # Returns: Medically responsible guidance
+```
+
+### Configuration
+
+**Required in `.env`:**
+```
+GEMINI_API_KEY=your_api_key_here
+```
+
+**Get API Key:**
+1. Visit https://ai.google.dev/
+2. Click "Get API Key"
+3. Create in Google Cloud Console
+4. Copy to `.env`
+
+### API Endpoints
+
+- `POST /api/chatbot/message/` → Send message to AI
+- `GET /api/chatbot/history/` → Get chat history
+
+---
+
+## Adding New Features
 
 ### Current Features (14 symptoms)
 

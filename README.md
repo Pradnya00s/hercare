@@ -2,14 +2,16 @@
 
 ## Overview
 
-**HerCare** is a comprehensive full-stack AI healthcare application that provides intelligent PCOS (Polycystic Ovary Syndrome) screening through a secure, user-friendly platform. The application combines:
+**HerCare** is a comprehensive full-stack AI healthcare application designed to empower women with intelligent health management. The platform combines advanced PCOS screening with period tracking and AI-powered health guidance:
 
 1. **User Authentication System** – Secure registration and login with JWT tokens
 2. **Personalized Dashboard** – User health overview and screening history
-3. **Two-Stage PCOS Prediction** – Machine learning ensemble + CNN ultrasound analysis
-4. **Modern React Frontend** – Intuitive multi-step workflow with healthcare-focused design
+3. **Two-Stage PCOS Prediction** – Machine learning ensemble (14 health indicators) + CNN ultrasound analysis
+4. **Period Tracker** – Menstrual cycle prediction, ovulation window calculation, and symptom pattern detection
+5. **AI Health Companion** – Real-time health guidance powered by Google Gemini API
+6. **Modern React Frontend** – Intuitive multi-step workflow with responsive healthcare-focused design
 
-This combined approach delivers accurate PCOS risk assessment with a seamless user experience.
+This integrated approach delivers personalized health insights with seamless user experience.
 
 ---
 
@@ -28,10 +30,24 @@ This combined approach delivers accurate PCOS risk assessment with a seamless us
 - Responsive design for all devices
 
 ✅ **Two-Stage PCOS Prediction**
-- Symptom questionnaire with 6 key indicators
+- Comprehensive symptom questionnaire (14 health indicators)
 - CNN-based ultrasound image analysis
-- Intelligent prediction combination
+- Intelligent weighted prediction combination
 - Risk stratification (Low/Moderate/High)
+- Result persistence and history tracking
+
+✅ **Period & Cycle Management**
+- Menstrual cycle tracking and prediction
+- Ovulation window calculation
+- Symptom logging (6 symptoms per day)
+- Recurring pattern detection
+- Lifestyle monitoring (sleep, stress, activity levels)
+
+✅ **AI Health Companion**
+- Real-time health chatbot powered by Google Gemini API
+- Medically responsible responses
+- Multi-language support
+- Personalized health guidance
 
 ✅ **Modern User Interface**
 - React 19 with React Router
@@ -75,19 +91,32 @@ HerCare/
 │   │   ├── apps.py                   # App configuration
 │   │   └── migrations/               # Database migrations
 │   ├── pcos_screener/                # PCOS screening app
-│   │   ├── models.py                 # PCOSScreener model (updated for CustomUser)
-│   │   ├── api_views.py              # PCOS API endpoints (TensorFlow safe)
+│   │   ├── models.py                 # PCOSScreener model
+│   │   ├── api_views.py              # PCOS prediction endpoints
 │   │   ├── api_urls.py               # PCOS API routes
 │   │   ├── ultrasound_predict.py     # CNN inference & preprocessing
 │   │   ├── ml_preprocess.py          # ML preprocessing utilities
 │   │   ├── data/                     # Training datasets
-│   │   │   └── pcos_clean_v1.csv
+│   │   │   └── pcos_clean_v1.csv     # Historical PCOS patient data
 │   │   ├── model/                    # Pre-trained ML models
 │   │   │   ├── pcosmodel.h5          # CNN model (TensorFlow/Keras)
 │   │   │   └── pcos_ultrasound_model/# SavedModel format
 │   │   ├── migrations/
 │   │   ├── templates/
 │   │   └── static/
+│   ├── period_tracker/               # Menstrual cycle tracking app
+│   │   ├── models.py                 # Cycle, SymptomLog, LifestyleLog models
+│   │   ├── services.py               # Cycle prediction & pattern detection
+│   │   ├── views.py                  # Tracker endpoints
+│   │   ├── urls.py                   # Tracker routes
+│   │   ├── ml_model.py               # Irregularity prediction
+│   │   └── migrations/               # Database migrations
+│   ├── chatbot/                      # AI Health companion app
+│   │   ├── models.py                 # ChatMessage model
+│   │   ├── services.py               # Google Gemini API integration
+│   │   ├── views.py                  # Chat endpoints
+│   │   ├── urls.py                   # Chat routes
+│   │   └── migrations/               # Database migrations
 │   └── venv/                         # Python virtual environment
 │
 └── frontend/                         # React + Vite (NEW)

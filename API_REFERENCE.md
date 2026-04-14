@@ -326,7 +326,563 @@ curl -X POST http://127.0.0.1:8000/api/combined-prediction/ \
 
 ---
 
-## HTTP Status Codes
+## Authentication Endpoints
+
+### 1. Register New User
+
+**Endpoint:** `POST /api/auth/register/`
+
+**Description:** Create a new user account
+
+#### Request
+
+**Content-Type:** `application/json`
+
+**Body Parameters:**
+
+| Parameter | Type | Required | Format | Example |
+|-----------|------|----------|--------|---------|
+| first_name | string | Yes | Max 150 chars | Jane |
+| last_name | string | Yes | Max 150 chars | Doe |
+| email | string | Yes | Valid email | jane@example.com |
+| password | string | Yes | Min 8 chars | SecurePass123 |
+
+#### Example Request
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/auth/register/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "email": "jane@example.com",
+    "password": "SecurePass123"
+  }'
+```
+
+#### Success Response
+
+**Status Code:** `201 Created`
+
+```json
+{
+  "id": 1,
+  "email": "jane@example.com",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "message": "Account created successfully"
+}
+```
+
+#### Error Responses
+
+**Email Already Exists (Status 400):**
+```json
+{
+  "error": "Email already registered"
+}
+```
+
+**Invalid Email (Status 400):**
+```json
+{
+  "error": "Invalid email format"
+}
+```
+
+**Weak Password (Status 400):**
+```json
+{
+  "error": "Password must be at least 8 characters"
+}
+```
+
+---
+
+### 2. User Login
+
+**Endpoint:** `POST /api/auth/login/`
+
+**Description:** Authenticate user and receive JWT tokens
+
+#### Request
+
+**Content-Type:** `application/json`
+
+**Body Parameters:**
+
+| Parameter | Type | Required | Example |
+|-----------|------|----------|---------|
+| email | string | Yes | jane@example.com |
+| password | string | Yes | SecurePass123 |
+
+#### Example Request
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/auth/login/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "jane@example.com",
+    "password": "SecurePass123"
+  }'
+```
+
+#### Success Response
+
+**Status Code:** `200 OK`
+
+```json
+{
+  "access": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+  "refresh": "eyJ0eXAiOiJKV1QiLCJhbGc...",
+  "user": {
+    "id": 1,
+    "email": "jane@example.com",
+    "first_name": "Jane",
+    "last_name": "Doe"
+  }
+}
+```
+
+**Response Fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| access | string | JWT access token (15 min expiry) |
+| refresh | string | JWT refresh token (7 day expiry) |
+| user | object | User profile data |
+
+#### Error Responses
+
+**Invalid Credentials (Status 401):**
+```json
+{
+  "error": "Invalid email or password"
+}
+```
+
+**User Not Found (Status 404):**
+```json
+{
+  "error": "User account not found"
+}
+```
+
+---
+
+### 3. Get User Profile
+
+**Endpoint:** `GET /api/auth/profile/`
+
+**Description:** Retrieve authenticated user's profile
+
+#### Request
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
+```
+
+#### Example Request
+
+```bash
+curl -X GET http://127.0.0.1:8000/api/auth/profile/ \
+  -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc..."
+```
+
+#### Success Response
+
+**Status Code:** `200 OK`
+
+```json
+{
+  "id": 1,
+  "email": "jane@example.com",
+  "first_name": "Jane",
+  "last_name": "Doe",
+  "date_joined": "2026-04-14T10:30:00Z"
+}
+```
+
+#### Error Responses
+
+**Unauthorized (Status 401):**
+```json
+{
+  "error": "Authentication credentials were not provided"
+}
+```
+
+**Token Expired (Status 401):**
+```json
+{
+  "error": "Token is invalid or expired"
+}
+```
+
+---
+
+## Dashboard Endpoints
+
+### 1. Get User Dashboard
+
+**Endpoint:** `GET /api/dashboard/`
+
+**Description:** Get user's health dashboard with screening history
+
+#### Request
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
+```
+
+#### Example Request
+
+```bash
+curl -X GET http://127.0.0.1:8000/api/dashboard/ \
+  -H "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGc..."
+```
+
+#### Success Response
+
+**Status Code:** `200 OK`
+
+```json
+{
+  "user": {
+    "id": 1,
+    "name": "Jane Doe",
+    "email": "jane@example.com"
+  },
+  "latest_screening": {
+    "date": "2026-04-14",
+    "risk_level": "Moderate RIsk",
+    "confidence": 65.50
+  },
+  "screening_history": [
+    {
+      "id": 1,
+      "date": "2026-04-14",
+      "risk_level": "Moderate Risk",
+      "confidence": 65.50
+    }
+  ],
+  "total_screenings": 1
+}
+```
+
+---
+
+## Period Tracker Endpoints
+
+### 1. Add Menstrual Cycle
+
+**Endpoint:** `POST /api/period-tracker/cycle/`
+
+**Description:** Log a new menstrual cycle
+
+#### Request
+
+**Content-Type:** `application/json`
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
+```
+
+**Body Parameters:**
+
+| Parameter | Type | Required | Format | Example |
+|-----------|------|----------|--------|---------|
+| start_date | string | Yes | YYYY-MM-DD | 2026-04-01 |
+| end_date | string | Yes | YYYY-MM-DD | 2026-04-05 |
+| cycle_length | integer | No | Days | 28 |
+| period_length | integer | No | Days | 5 |
+
+#### Example Request
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/period-tracker/cycle/ \
+  -H "Authorization: Bearer {token}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "start_date": "2026-04-01",
+    "end_date": "2026-04-05",
+    "cycle_length": 28,
+    "period_length": 5
+  }'
+```
+
+#### Success Response
+
+**Status Code:** `201 Created`
+
+```json
+{
+  "id": 1,
+  "start_date": "2026-04-01",
+  "end_date": "2026-04-05",
+  "cycle_length": 28,
+  "created_at": "2026-04-14T10:30:00Z"
+}
+```
+
+---
+
+### 2. Log Daily Symptoms
+
+**Endpoint:** `POST /api/period-tracker/symptoms/`
+
+**Description:** Log daily period symptoms
+
+#### Request
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
+```
+
+**Body Parameters:**
+
+| Parameter | Type | Example |
+|-----------|------|---------|
+| date | string | 2026-04-05 |
+| flow | string | Medium |
+| cramps | boolean | true |
+| fatigue | boolean | true |
+| acne | boolean | false |
+| headache | boolean | false |
+| bloating | boolean | true |
+| breast_tenderness | boolean | true |
+| mood | string | Happy, Calm |
+| notes | string | Feeling better |
+
+#### Example Request
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/period-tracker/symptoms/ \
+  -H "Authorization: Bearer {token}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "date": "2026-04-05",
+    "flow": "Medium",
+    "cramps": true,
+    "fatigue": true,
+    "acne": false,
+    "headache": false,
+    "bloating": true,
+    "breast_tenderness": true,
+    "mood": "Happy, Calm",
+    "notes": "Feeling better"
+  }'
+```
+
+#### Success Response
+
+**Status Code:** `201 Created`
+
+```json
+{
+  "id": 1,
+  "date": "2026-04-05",
+  "flow": "Medium",
+  "cramps": true,
+  "fatigue": true,
+  "created_at": "2026-04-05T09:00:00Z"
+}
+```
+
+---
+
+### 3. Get Cycle Prediction
+
+**Endpoint:** `GET /api/period-tracker/predict/`
+
+**Description:** Get predicted next period and ovulation window
+
+#### Request
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
+```
+
+#### Example Request
+
+```bash
+curl -X GET http://127.0.0.1:8000/api/period-tracker/predict/ \
+  -H "Authorization: Bearer {token}"
+```
+
+#### Success Response
+
+**Status Code:** `200 OK`
+
+```json
+{
+  "predicted_start_date": "2026-05-01",
+  "avg_cycle_length": 28.5,
+  "ovulation_day": "2026-04-17",
+  "fertile_window_start": "2026-04-15",
+  "fertile_window_end": "2026-04-19",
+  "confidence": "medium"
+}
+```
+
+---
+
+### 4. Get Symptom Patterns
+
+**Endpoint:** `GET /api/period-tracker/patterns/`
+
+**Description:** Detect recurring symptom patterns
+
+#### Request
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
+```
+
+#### Example Request
+
+```bash
+curl -X GET http://127.0.0.1:8000/api/period-tracker/patterns/ \
+  -H "Authorization: Bearer {token}"
+```
+
+#### Success Response
+
+**Status Code:** `200 OK`
+
+```json
+{
+  "patterns": [
+    "Frequent cramps detected",
+    "Frequent fatigue detected",
+    "Frequent bloating detected"
+  ],
+  "total_logs": 5,
+  "analysis_period": "last 30 days"
+}
+```
+
+---
+
+## AI Health Companion Endpoints
+
+### 1. Send Chat Message
+
+**Endpoint:** `POST /api/chatbot/message/`
+
+**Description:** Send message to AI health companion powered by Google Gemini
+
+#### Request
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
+Content-Type: application/json
+```
+
+**Body Parameters:**
+
+| Parameter | Type | Required | Example |
+|-----------|------|----------|---------|
+| message | string | Yes | What are symptoms of PCOS? |
+| language | string | No (default: en) | en, es, fr |
+
+#### Example Request
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/chatbot/message/ \
+  -H "Authorization: Bearer {token}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "What are symptoms of PCOS?",
+    "language": "en"
+  }'
+```
+
+#### Success Response
+
+**Status Code:** `200 OK`
+
+```json
+{
+  "user_message": "What are symptoms of PCOS?",
+  "ai_response": "PCOS (Polycystic Ovary Syndrome) symptoms include: irregular periods, excess androgen, hair growth, acne, pelvic pain...",
+  "timestamp": "2026-04-14T14:30:00Z",
+  "language": "en"
+}
+```
+
+#### Error Responses
+
+**Missing API Key (Status 500):**
+```json
+{
+  "error": "AI service not configured. Missing GEMINI_API_KEY"
+}
+```
+
+**API Error (Status 500):**
+```json
+{
+  "error": "AI service temporarily unavailable"
+}
+```
+
+---
+
+### 2. Get Chat History
+
+**Endpoint:** `GET /api/chatbot/history/`
+
+**Description:** Retrieve user's chat history
+
+#### Request
+
+**Headers:**
+```
+Authorization: Bearer {access_token}
+```
+
+#### Example Request
+
+```bash
+curl -X GET http://127.0.0.1:8000/api/chatbot/history/ \
+  -H "Authorization: Bearer {token}"
+```
+
+#### Success Response
+
+**Status Code:** `200 OK`
+
+```json
+{
+  "messages": [
+    {
+      "id": 1,
+      "user_message": "What is PCOS?",
+      "ai_response": "PCOS is a hormonal disorder...",
+      "timestamp": "2026-04-14T10:00:00Z"
+    },
+    {
+      "id": 2,
+      "user_message": "How is it treated?",
+      "ai_response": "PCOS treatment includes...",
+      "timestamp": "2026-04-14T10:15:00Z"
+    }
+  ],
+  "total_messages": 2
+}
+```
+
+---
+
+## Error Handling
 
 | Code | Meaning | When Used |
 |------|---------|-----------|
@@ -412,6 +968,104 @@ POST /api/combined-prediction/
     "ultrasound_weight": 0.4
   }
 }
+```
+
+---
+
+## Complete Authenticated Workflow Example
+
+### Step 1: Register User
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/auth/register/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "email": "jane@example.com",
+    "password": "SecurePass123"
+  }'
+
+# Response: {"id": 1, "email": "jane@example.com", "message": "Account created"}
+```
+
+### Step 2: Login & Get Tokens
+
+```bash
+RESPONSE=$(curl -X POST http://127.0.0.1:8000/api/auth/login/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "jane@example.com",
+    "password": "SecurePass123"
+  }')
+
+TOKEN=$(echo $RESPONSE | jq -r '.access')
+```
+
+### Step 3: Get Dashboard
+
+```bash
+curl -X GET http://127.0.0.1:8000/api/dashboard/ \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### Step 4: PCOS Screening
+
+```bash
+# Step 4a: Get Symptom Prediction
+curl -X POST http://127.0.0.1:8000/api/pcos/form-predict/ \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "age_yrs": 25,
+    "weight_kg": 65,
+    "heightcm": 160,
+    "cycleri": 1,
+    "cycle_lengthdays": 45,
+    "pregnantyn": 0,
+    "no_of_abortions": 0,
+    "weight_gainyn": 1,
+    "hair_growthyn": 1,
+    "skin_darkening_yn": 1,
+    "hair_lossyn": 0,
+    "pimplesyn": 1,
+    "fast_food_yn": 1,
+    "regexerciseyn": 0
+  }'
+
+# Response: {"prediction": 1, "pcos_probability": 62.50, "result": "PCOS Likely"}
+```
+
+### Step 5: Period Tracking
+
+```bash
+# Log a cycle
+curl -X POST http://127.0.0.1:8000/api/period-tracker/cycle/ \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "start_date": "2026-04-01",
+    "end_date": "2026-04-05",
+    "cycle_length": 28
+  }'
+
+# Get predictions
+curl -X GET http://127.0.0.1:8000/api/period-tracker/predict/ \
+  -H "Authorization: Bearer $TOKEN"
+```
+
+### Step 6: AI Health Chat
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/chatbot/message/ \
+  -H "Authorization: Bearer $TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "What are the symptoms of PCOS?",
+    "language": "en"
+  }'
+
+# Response: {"user_message": "...", "ai_response": "PCOS symptoms include..."}
 ```
 
 ---

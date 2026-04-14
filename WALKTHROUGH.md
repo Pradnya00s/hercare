@@ -81,7 +81,24 @@ venv\Scripts\Activate.ps1
 
 ✅ **You'll see `(venv)` prefix in terminal when activated**
 
-### Step 2.3: Install Dependencies
+### Step 2.3: Setup Environment Variables
+
+Create a `.env` file in the `backend/` directory with required API keys:
+
+```bash
+# backend/.env
+GEMINI_API_KEY=your_gemini_api_key_here
+```
+
+**How to get GEMINI_API_KEY:**
+1. Visit https://ai.google.dev/
+2. Click "Get API Key"
+3. Create new API key in Google Cloud Console
+4. Copy and paste into `.env` file
+
+⚠️ **Keep .env file private - never commit to version control**
+
+### Step 2.4: Install Dependencies
 
 ```bash
 pip install -r requirements.txt
@@ -91,12 +108,13 @@ This installs:
 - Django & REST framework
 - TensorFlow (for CNN model)
 - Scikit-learn (for ensemble model)
+- Google Generative AI (for Chatbot)
 - Pillow (for image processing)
 - Other required packages
 
 ⏳ **This may take 3-5 minutes on first install (TensorFlow is large)**
 
-### Step 2.4: Verify Installation
+### Step 2.5: Verify Installation
 
 ```bash
 python -c "import tensorflow; print('TensorFlow version:', tensorflow.__version__)"
@@ -312,7 +330,50 @@ Final PCOS Risk Assessment → 72% → High Risk
 - Date and risk level shown
 - Can start new screening
 
-### Test Case 5: Logout and Login Again
+### Test Case 5: Period Tracker
+
+**Step 1:** Click "Period Tracker" in navbar
+
+**Step 2:** Log a menstrual cycle
+```
+Start Date: 2026-04-01
+End Date: 2026-04-05
+Cycle Length: 28 days
+```
+
+**Step 3:** Log symptoms
+```
+- Cramps: YES
+- Fatigue: YES
+- Acne: YES
+- Mood: Happy, Calm
+- Notes: All good
+```
+
+**Expected Result:**
+- Cycle logged successfully
+- Ovulation window predicted
+- Next period date shown
+- Symptom patterns detected
+
+### Test Case 6: AI Health Companion
+
+**Step 1:** Click "AI Health" in navbar
+
+**Step 2:** Type a health question:
+```
+"What are the symptoms of PCOS?"
+```
+
+**Step 3:** See AI-powered response from Gemini
+
+**Expected Result:**
+- Real-time response from AI
+- Medically responsible guidance
+- Multi-language support
+- Chat history preserved
+
+### Test Case 7: Logout and Login Again
 
 **Step 1:** Click "Logout" in navbar
 
@@ -474,16 +535,39 @@ npm run dev
 
 ---
 
-### ❌ Problem: "Module not found: tensorflow"
+### ❌ Problem: "GEMINI_API_KEY not found" error
 
-**Cause:** Dependencies not installed
+**Cause:** Missing .env file or API key not configured
+
+**Solution:**
+```bash
+# Create .env file in backend/
+cd backend
+cat > .env << EOF
+GEMINI_API_KEY=your_key_here
+EOF
+
+# Restart Django server
+python manage.py runserver
+```
+
+**Don't have API key?**
+1. Visit https://ai.google.dev/
+2. Click "Get API Key"
+3. Create key in Google Cloud Console
+4. Copy to .env file
+
+---
+
+### ❌ Problem: "Module not found: google.generativeai"
+
+**Cause:** Gemini package not installed
 
 **Solution:**
 ```bash
 cd backend
-source venv/bin/activate  # macOS/Linux
-# or venv\Scripts\activate  # Windows
-pip install -r requirements.txt
+source venv/bin/activate
+pip install google-generativeai
 ```
 
 ---
