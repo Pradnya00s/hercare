@@ -44,7 +44,7 @@ This integrated approach delivers personalized health insights with seamless use
 - Lifestyle monitoring (sleep, stress, activity levels)
 
 ✅ **AI Health Companion**
-- Real-time health chatbot powered by Google Gemini API
+- Real-time health chatbot powered by Ollama
 - Medically responsible responses
 - Multi-language support
 - Personalized health guidance
