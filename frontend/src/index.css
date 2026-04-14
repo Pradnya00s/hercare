@@ -1,0 +1,45 @@
+/* index.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap');
+
+/* Global Variables to match the exact HerCare aesthetic */
+:root {
+  --color-primary: #D17895; 
+  --color-primary-hover: #b8647e;
+  --color-text-dark: #3A2E2F;
+  --color-text-muted: #837A7B;
+  --color-bg: #FFFDFD;
+  --color-white: #FFFFFF;
+  
+  --font-heading: 'Playfair Display', serif;
+  --font-body: 'Inter', sans-serif;
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Base Body Styles & Soft Mesh Background */
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-bg);
+  color: var(--color-text-dark);
+  min-height: 100vh;
+  font-weight: 300;
+  
+  /* This creates the soft, floating pink/peach gradients in the background */
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(248, 215, 224, 0.4) 0%, transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba(250, 235, 215, 0.5) 0%, transparent 50%);
+  background-attachment: fixed;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+}

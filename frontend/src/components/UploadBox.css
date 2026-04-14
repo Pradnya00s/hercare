@@ -1,0 +1,35 @@
+.upload-box-modern {
+  border: 2px dashed rgba(0,0,0,0.1);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  text-align: center;
+  background: var(--color-white);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 2rem;
+}
+
+.upload-box-modern:hover, 
+.upload-box-modern.dragging {
+  border-color: var(--color-primary);
+  background: #FAFAFA;
+}
+
+.upload-icon-modern {
+  color: var(--color-primary);
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.upload-box-modern h4 {
+  font-family: var(--font-body);
+  color: var(--color-text-dark);
+  font-weight: 500;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.upload-box-modern p {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+}

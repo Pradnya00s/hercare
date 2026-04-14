@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PCOS Screener</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'pcos_screener/pcosform_styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>PCOS Screener</h2>
+
+        {% if result %}
+            <div class="result">
+                <strong>Prediction:</strong> {{ result }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% for feature, label in feature_labels.items %}
+                <div class="form-group">
+                    <label for="{{ feature }}">{{ label }}</label>
+
+                    {% if feature in yes_no_features %}
+                        <select name="{{ feature }}" id="{{ feature }}" required>
+                            <option value="">--Select--</option>
+                            {% if feature == "cycleri" %}
+                                <option value="0">Regular</option>
+                                <option value="1">Irregular</option>
+                            {% else %}
+                                <option value="0">No</option>
+                                <option value="1">Yes</option>
+                            {% endif %}
+                        </select>
+                    {% else %}
+                        <input type="number" step="any" name="{{ feature }}" id="{{ feature }}" required>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit">Predict</button>
+        </form>
+    </div>
+</body>
+</html>
