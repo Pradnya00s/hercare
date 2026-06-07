@@ -4,7 +4,7 @@ import axios from 'axios';
 const api = axios.create({
   baseURL: 'http://127.0.0.1:8000/api',
   headers: {
-    'Content-Type': 'application/json',
+    
   },
 });
 
@@ -14,6 +14,10 @@ api.interceptors.request.use(
     const token = localStorage.getItem('access_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+    }
+    // 🔥 Important: don't override multipart headers
+    if (config.data instanceof FormData) {
+      delete config.headers['Content-Type'];
     }
     return config;
   },
@@ -99,6 +103,16 @@ export const pcosAPI = {
   },
   getCombinedPrediction: (data) => api.post('/combined-prediction/', data),
   getHistory: () => api.get('/auth/profile/pcos-history/'),
+};
+
+export const oncologyAPI = {
+  fullAssessment: (formData) => {
+    return api.post('/breast/full-assessment/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
 };
 
 export default api;

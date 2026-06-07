@@ -18,7 +18,7 @@ urlpatterns = [
     path("", include("pcos_screener.api_urls")),
     path("api/", include("pcos_screener.api_urls")),
     path('api/chat/', include('chatbot.urls')),
-
+    path('api/breast/', include('breast_module.urls')),
     path("api/period/", include("period_tracker.urls")),
 ]
 

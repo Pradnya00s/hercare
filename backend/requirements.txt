@@ -16,7 +16,7 @@ tensorflow==2.15.0
 keras==2.15.0
 
 # Machine Learning
-scikit-learn==1.7.2
+scikit-learn==1.3.2 
 pandas==2.2.0
 numpy==1.26.4
 
@@ -46,13 +46,6 @@ colorama==0.4.6
 cryptography==46.0.5
 distro==1.9.0
 exceptiongroup==1.3.1
-google-ai-generativelanguage==0.6.6
-google-api-core==2.29.0
-google-api-python-client==2.190.0
-google-auth==2.49.0.dev0
-google-auth-httplib2==0.3.0
-google-generativeai==0.7.2
-googleapis-common-protos==1.72.0
 grpcio==1.78.0
 grpcio-status==1.62.3
 h11==0.16.0
@@ -83,3 +76,11 @@ uritemplate==4.2.0
 urllib3==2.6.3
 websockets==15.0.1
 
+#Sakshi’s module (breast cancer) requirements
+Django>=4.2,<5.0
+djangorestframework>=3.14,<4.0
+django-cors-headers>=4.0,<5.0
+numpy>=1.24,<2.0
+opencv-python>=4.8,<5.0
+tensorflow>=2.13,<3.0
+scikit-learn>=1.3,<2.0

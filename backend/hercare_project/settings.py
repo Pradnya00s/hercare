@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'pcos_screener',
     'chatbot',
     'period_tracker',
-    #'cancer_screener',    # Sakshi’s module
+    'breast_module',
     
 ]
 

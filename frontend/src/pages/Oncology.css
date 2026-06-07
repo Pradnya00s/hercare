@@ -1,0 +1,187 @@
+.oncology-page {
+  padding: 40px;
+}
+
+/* Layout */
+.oncology-layout {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.left-panel {
+  flex: 1;
+}
+
+.right-panel {
+  flex: 1;
+  background: #fafafa;
+  border-radius: 20px;
+  padding: 30px;
+}
+
+/* Button */
+button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ff6b9a, #e0528a);
+  color: white;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* Placeholder */
+.placeholder {
+  text-align: center;
+  color: #888;
+  margin-top: 100px;
+}
+
+/* Card */
+.symptoms-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 20px;
+  margin-top: 2rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.symptoms-card h2 {
+  font-size: 1.6rem;
+  margin-bottom: 0.3rem;
+}
+
+.symptoms-card p {
+  color: #777;
+  margin-bottom: 1.5rem;
+}
+
+.symptoms-card h4 {
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+/* 🔥 FIX: top section alignment */
+.top-inputs {
+  display: flex;
+  gap: 3rem;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+/* Age field */
+.age-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.age-field label {
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.age-field input {
+  padding: 0.5rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  width: 100px;
+}
+
+/* Question block */
+.question-block {
+  max-width: 300px;
+}
+
+.question-block p {
+  font-size: 0.95rem;
+  color: #444;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+/* Yes/No buttons */
+.radio-group {
+  display: flex;
+  gap: 1rem;
+}
+
+.radio-btn {
+  padding: 0.6rem 1.6rem;
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+  transition: 0.2s ease;
+  font-size: 0.95rem;
+  color: #444; /* 🔥 FIX: ensures text is visible */
+}
+
+.radio-btn:hover {
+  border-color: #ff6b9a;
+  color: #ff2e6d;
+}
+
+/* ACTIVE STATE */
+.radio-btn.active {
+  background: linear-gradient(135deg, #ff6b9a, #e0528a);
+  border: none;
+  color: white; /* 🔥 FIX: visible on pink */
+  font-weight: 500;
+}
+
+/* Symptom chips */
+.symptom-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+}
+
+.chip {
+  padding: 0.6rem 1rem;
+  color: #333;
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.chip:hover {
+  background: #ffe4ec;
+  border-color: #ff6b9a;
+}
+
+.chip.active {
+  background: #ffe4ec;
+  border-color: #ff6b9a;
+  color: #ff2e6d;
+  font-weight: 500;
+}
+
+/* Additional context */
+.additional-section textarea {
+  width: 100%;
+  min-height: 120px;
+  border-radius: 14px;
+  border: 1px solid #e0e0e0;
+  padding: 1rem;
+  font-size: 0.95rem;
+  background: #fafafa;
+  resize: none;
+}
+
+.additional-section textarea:focus {
+  outline: none;
+  border-color: #ff6b9a;
+  background: white;
+}

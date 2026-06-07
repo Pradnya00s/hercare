@@ -14,6 +14,7 @@ import PeriodTracker from "./pages/PeriodTracker";
 import AIHealth from "./pages/AIHealth";           
 import Onboarding from "./pages/Onboarding";
 import Profile from "./pages/Profile";
+import Oncology from "./pages/Oncology";
 
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/pcos-detector" element={<PCOSDetector />} />
           <Route path="/period-tracker" element={<PeriodTracker />} />
+          <Route path="/breast-cancer" element={<Oncology />} />
           <Route path="/ai-health" element={<AIHealth />} />
           <Route path="/profile" element={<Profile />} />
 

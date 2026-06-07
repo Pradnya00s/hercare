@@ -1,0 +1,83 @@
+.oncology-result {
+  height: 100%;
+  border-radius: 20px;
+  padding: 40px;
+  background: #fafafa;
+  text-align: center;
+}
+
+/* HEADER */
+
+.result-header {
+  opacity: 0.6;
+  margin-bottom: 40px;
+}
+
+.result-header .icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+/* MAIN */
+
+.result-label {
+  font-size: 42px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+/* COLORS */
+
+.result-label.high {
+  color: #e0528a;
+}
+
+.result-label.medium {
+  color: #d88b00;
+}
+
+.result-label.low {
+  color: #2e9e63;
+}
+
+/* CONFIDENCE */
+
+.confidence {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* RISK BADGE */
+
+.risk-pill {
+  display: inline-block;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+/* BADGE COLORS */
+
+.risk-pill.high {
+  background: #fde7ec;
+  color: #e0528a;
+}
+
+.risk-pill.medium {
+  background: #fff5e6;
+  color: #d88b00;
+}
+
+.risk-pill.low {
+  background: #e8f6ee;
+  color: #2e9e63;
+}
+
+/* INFO */
+
+.result-info {
+  margin-top: 40px;
+  font-size: 14px;
+  color: #777;
+}
